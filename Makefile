@@ -1,6 +1,6 @@
 
 CFLAGS = -std=c11 -Wall -Werror -O2 -g -D_GNU_SOURCE
-LDFLAGS = -lSDL
+LDFLAGS = -lSDL2
 PROGNAME = beepr
 
 .PHONY: default all clean
