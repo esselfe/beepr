@@ -1,0 +1,30 @@
+# beepr 0.1.5
+  
+The beepr program generated from this source generate beep sound
+using various methods. Using ioctl() requires root priviledges to
+write to /dev/tty0. Also CONFIG_INPUT_PCSPKR has to be enabled in
+the kernel's configuration.
+  
+Typical use:  
+ 'beepr -b'
+ 'beepr -f 440 --ioctl'
+  
+To compile the beepr program in a terminal, go to the source 
+directory, type:  
+make  
+  
+Copy the executable to /bin or wherever you prefer
+
+Here's the help from running 'beepr --help':
+Usage: beepr [ OPTIONS ]
+Options:
+	-h, --help		Show this help message
+	-b, --beep		Play a simple beep
+	-d, --daemon		Run in the background and listen to FIFO /run/beepr-cmd
+	-D, --dsp		Write data on /dev/dsp
+	-f, --frequency	Set beep frequency in HZ
+	-i, --ioctl		Use ioctl() on /dev/console
+	-l, --length		Beep duration in milliseconds
+	-p, --pipe		Write to /run/beepr-cmd
+	-V, --version	Show program version and exit
+	-v, --verbose	Show more information for debugging
