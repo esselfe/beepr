@@ -2,7 +2,7 @@
   
 The beepr program generated from this source generate beep sound
 using various methods. Using ioctl() requires root priviledges to
-write to /dev/tty0. Also CONFIG_INPUT_PCSPKR has to be enabled in
+write to /dev/console. Also CONFIG_INPUT_PCSPKR has to be enabled in
 the kernel's configuration.
   
 Typical use:  
