@@ -8,7 +8,9 @@
 #include <sys/stat.h>
 #include <linux/kd.h>
 
+#ifdef HAVE_SDL2
 #include <SDL2/SDL.h>
+#endif
 
 const char *beepr_version_string = "0.0.1.6";
 
