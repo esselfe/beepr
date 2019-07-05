@@ -13,6 +13,11 @@ all: $(PROGNAME)
 $(PROGNAME): beepr.c
 	gcc $(CFLAGS) $(LDFLAGS) beepr.c -o $(PROGNAME)
 
+sdl: $(PROGNAME)-sdl
+
+$(PROGNAME)-sdl: beepr.c
+	gcc $(CFLAGS) -DHAVE_SDL2 $(LDFLAGS) beepr.c -o $(PROGNAME)-sdl
+
 clean:
 	@rm -v $(PROGNAME) 2>/dev/null || true
 
