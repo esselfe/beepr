@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
@@ -12,7 +13,7 @@
 #include <SDL2/SDL.h>
 #endif
 
-const char *beepr_version_string = "0.0.1.6";
+const char *beepr_version_string = "0.1.7";
 
 static const struct option long_options[] = {
 	{"help", no_argument, NULL, 'h'},
