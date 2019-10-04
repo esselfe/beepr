@@ -13,12 +13,13 @@
 #include <SDL2/SDL.h>
 #endif
 
-const char *beepr_version_string = "0.1.7";
+const char *beepr_version_string = "0.1.8";
 
 static const struct option long_options[] = {
 	{"help", no_argument, NULL, 'h'},
 #ifdef HAVE_SDL2
 	{"beep", no_argument, NULL, 'b'},
+	{"error", no_argument, NULL, 'e'},
 #endif
 	{"daemon", no_argument, NULL, 'd'},
 	{"dsp", no_argument, NULL, 'D'},
@@ -31,7 +32,7 @@ static const struct option long_options[] = {
 	{NULL, 0, NULL, 0}
 };
 #ifdef HAVE_SDL2
-static const char *short_options = "hbDdf:il:pVv";
+static const char *short_options = "hbDdef:il:pVv";
 #else
 static const char *short_options = "hDdf:il:pVv";
 #endif
@@ -42,6 +43,7 @@ char beepr_buffer[BEEPR_BUFFER_SIZE];
 unsigned int beepr_frequency = 440;
 unsigned int beepr_length = 125;
 unsigned int verbose;
+unsigned int play_SDL_error;
 
 void beeprShowHelp(void) {
 	printf("Usage: beepr [ OPTIONS ]\n"
@@ -49,6 +51,7 @@ void beeprShowHelp(void) {
 "\t-h, --help		Show this help message\n"
 #ifdef HAVE_SDL2
 "\t-b, --beep		Play a simple beep\n"
+"\t-e, --error		Play a simple error beep\n"
 #endif
 "\t-d, --daemon		Run in the background and listen to FIFO /run/beepr-cmd\n"
 "\t-D, --dsp		Write data on /dev/dsp\n"
@@ -113,10 +116,18 @@ void beeprSDL(void) {
 	SDL_OpenAudio(&desired, &obtained);
 
 	memset(beepr_buffer, '#', 4096);
-	beeprSDL_play(440);
-	beeprSDL_play(880);
-	beeprSDL_play(512);
-	beeprSDL_play(682);
+	if (play_SDL_error) {
+		beeprSDL_play(1080);
+		beeprSDL_play(882);
+		beeprSDL_play(624);
+		beeprSDL_play(440);
+	}
+	else {
+		beeprSDL_play(440);
+		beeprSDL_play(880);
+		beeprSDL_play(1024);
+		beeprSDL_play(1648);
+	}
 
 	SDL_CloseAudio();
 	SDL_Quit();
@@ -213,6 +224,10 @@ int main(int argc, char **argv) {
 			exit(0);
 #ifdef HAVE_SDL2
 		case 'b':
+			beeprSDL();
+			exit(0);
+		case 'e':
+			play_SDL_error = 1;
 			beeprSDL();
 			exit(0);
 #endif

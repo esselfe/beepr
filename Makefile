@@ -7,8 +7,8 @@ PROGNAME = beepr
 
 default: all
 
-all: $(PROGNAME)
-	@[ -f "$(PROGNAME)" ] && ls -l --color=auto $(PROGNAME)
+all: $(PROGNAME) sdl
+	@[ -f "$(PROGNAME)" ] && ls -l --color=auto $(PROGNAME) $(PROGNAME)-sdl
 
 $(PROGNAME): beepr.c
 	gcc $(CFLAGS) $(LDFLAGS) beepr.c -o $(PROGNAME)
@@ -19,5 +19,5 @@ $(PROGNAME)-sdl: beepr.c
 	gcc $(CFLAGS) -DHAVE_SDL2 $(LDFLAGS) beepr.c -o $(PROGNAME)-sdl
 
 clean:
-	@rm -v $(PROGNAME) 2>/dev/null || true
+	@rm -v $(PROGNAME) $(PROGNAME)-sdl 2>/dev/null || true
 
