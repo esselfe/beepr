@@ -13,7 +13,7 @@
 #include <SDL2/SDL.h>
 #endif
 
-const char *beepr_version_string = "0.1.8";
+const char *beepr_version_string = "0.1.9";
 
 static const struct option long_options[] = {
 	{"help", no_argument, NULL, 'h'},
@@ -44,6 +44,7 @@ unsigned int beepr_frequency = 440;
 unsigned int beepr_length = 125;
 unsigned int verbose;
 unsigned int play_SDL_error;
+unsigned int use_ioctl;
 
 void beeprShowHelp(void) {
 	printf("Usage: beepr [ OPTIONS ]\n"
@@ -96,7 +97,10 @@ void beeprMakeBuffer(unsigned int freq) {
 void beeprSDL_play(unsigned int freq) {
 	beeprMakeBuffer(freq);
 	SDL_PauseAudio(0);
-	usleep(beepr_length*1000);
+	if (play_SDL_error)
+		usleep(beepr_length*2*1000);
+	else
+		usleep(beepr_length*1000);
 	SDL_PauseAudio(1);
 }
 
@@ -241,7 +245,7 @@ int main(int argc, char **argv) {
 			beepr_frequency = atoi(optarg);
 			break;
 		case 'i':
-			beeprIoctl(beepr_frequency);
+			use_ioctl = 1;
 			exit(0);
 		case 'l':
 			beepr_length = atoi(optarg);
@@ -257,10 +261,13 @@ int main(int argc, char **argv) {
 			break;
 		}
 	}
+
+	if (use_ioctl) {
+		beeprIoctl(beepr_frequency);
+		return 0;
+	}
 #ifdef HAVE_SDL2
 	beeprSDL();
-#else
-	beeprIoctl(beepr_frequency);
 #endif
 
 	return 0;
