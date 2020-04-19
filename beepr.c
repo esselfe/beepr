@@ -13,7 +13,7 @@
 #include <SDL2/SDL.h>
 #endif
 
-const char *beepr_version_string = "0.1.9";
+const char *beepr_version_string = "0.1.10";
 
 static const struct option long_options[] = {
 	{"help", no_argument, NULL, 'h'},
@@ -246,7 +246,7 @@ int main(int argc, char **argv) {
 			break;
 		case 'i':
 			use_ioctl = 1;
-			exit(0);
+			break;
 		case 'l':
 			beepr_length = atoi(optarg);
 			break;
