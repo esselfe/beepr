@@ -51,8 +51,8 @@ void beeprShowHelp(void) {
 "Options:\n"
 "\t-h, --help		Show this help message\n"
 #ifdef HAVE_SDL2
-"\t-b, --beep		Play a simple beep\n"
-"\t-e, --error		Play a simple error beep\n"
+"\t-b, --beep		Play a simple beep using SDL audio\n"
+"\t-e, --error		Play a simple error beep using SDL audio\n"
 #endif
 "\t-d, --daemon		Run in the background and listen to FIFO /run/beepr-cmd\n"
 "\t-D, --dsp		Write data on /dev/dsp\n"
@@ -280,7 +280,11 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 	if (use_ioctl) {
-		beeprIoctl(beepr_frequency);
+		if (beepr_frequency)
+			beeprIoctl(beepr_frequency);
+		else
+			beeprIoctl(440);
+
 		return 0;
 	}
 #ifdef HAVE_SDL2
