@@ -40,11 +40,11 @@ static const char *short_options = "hDdf:il:pVv";
 #define BEEPR_BUFFER_SIZE 4096
 char beepr_buffer[BEEPR_BUFFER_SIZE];
 
-unsigned int beepr_frequency = 440;
+unsigned int beepr_frequency;
 unsigned int beepr_length = 125;
 unsigned int verbose;
 unsigned int play_SDL_error;
-unsigned int use_ioctl;
+unsigned int use_ioctl, use_dsp;
 
 void beeprShowHelp(void) {
 	printf("Usage: beepr [ OPTIONS ]\n"
@@ -120,18 +120,22 @@ void beeprSDL(void) {
 	SDL_OpenAudio(&desired, &obtained);
 
 	memset(beepr_buffer, '#', 4096);
-	if (play_SDL_error) {
-		beeprSDL_play(1080);
-		beeprSDL_play(882);
-		beeprSDL_play(624);
-		beeprSDL_play(440);
+	if (!beepr_frequency) {
+		if (play_SDL_error) {
+			beeprSDL_play(1080);
+			beeprSDL_play(882);
+			beeprSDL_play(624);
+			beeprSDL_play(440);
+		}
+		else {
+			beeprSDL_play(440);
+			beeprSDL_play(880);
+			beeprSDL_play(1024);
+			beeprSDL_play(1648);
+		}
 	}
-	else {
-		beeprSDL_play(440);
-		beeprSDL_play(880);
-		beeprSDL_play(1024);
-		beeprSDL_play(1648);
-	}
+	else
+		beeprSDL_play(beepr_frequency);
 
 	SDL_CloseAudio();
 	SDL_Quit();
@@ -165,8 +169,11 @@ void beeprPipe(void) {
 		return;
 	}
 
-	char command[5];
-	sprintf(command, "440\n");
+	char command[40];
+	if (beepr_frequency)
+		sprintf(command, "%u\n", beepr_frequency);
+	else
+		sprintf(command, "440\n");
 	fwrite(command, 1, strlen(command), fp);
 
 	fclose(fp);
@@ -204,14 +211,20 @@ void beeprDSP(void) {
 		exit(1);
 	}
 
-	beeprMakeBuffer(440);
-	fwrite(beepr_buffer, 1, 4096, fp);
-	beeprMakeBuffer(2840);
-	fwrite(beepr_buffer, 1, 4096, fp);
-	beeprMakeBuffer(1640);
-	fwrite(beepr_buffer, 1, 4096, fp);
-	beeprMakeBuffer(440);
-	fwrite(beepr_buffer, 1, 4096, fp);
+	if (!beepr_frequency) {
+		beeprMakeBuffer(440);
+		fwrite(beepr_buffer, 1, 4096, fp);
+		beeprMakeBuffer(2840);
+		fwrite(beepr_buffer, 1, 4096, fp);
+		beeprMakeBuffer(1640);
+		fwrite(beepr_buffer, 1, 4096, fp);
+		beeprMakeBuffer(440);
+		fwrite(beepr_buffer, 1, 4096, fp);
+	}
+	else {
+		beeprMakeBuffer(beepr_frequency);
+		fwrite(beepr_buffer, 1, 4096, fp);
+	}
 
 	fclose(fp);
 }
@@ -236,8 +249,8 @@ int main(int argc, char **argv) {
 			exit(0);
 #endif
 		case 'D':
-			beeprDSP();
-			exit(0);
+			use_dsp = 1;
+			break;
 		case 'd':
 			beeprPipeDaemon();
 			exit (0);
@@ -262,6 +275,10 @@ int main(int argc, char **argv) {
 		}
 	}
 
+	if (use_dsp) {
+		beeprDSP();
+		return 0;
+	}
 	if (use_ioctl) {
 		beeprIoctl(beepr_frequency);
 		return 0;
