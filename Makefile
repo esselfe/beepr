@@ -1,5 +1,5 @@
 
-CFLAGS = -std=c11 -Wall -Werror -O2 -g -D_GNU_SOURCE
+CFLAGS = -std=c11 -Wall -O2 -g -D_GNU_SOURCE
 LDFLAGS = -lSDL2
 PROGNAME = beepr
 
