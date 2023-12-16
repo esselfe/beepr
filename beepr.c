@@ -13,7 +13,7 @@
 #include <SDL2/SDL.h>
 #endif
 
-const char *beepr_version_string = "0.1.11";
+const char *beepr_version_string = "0.1.12";
 
 static const struct option long_options[] = {
 	{"help", no_argument, NULL, 'h'},
