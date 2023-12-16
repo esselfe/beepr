@@ -49,19 +49,19 @@ unsigned int use_ioctl, use_dsp;
 void beeprShowHelp(void) {
 	printf("Usage: beepr [ OPTIONS ]\n"
 "Options:\n"
-"\t-h, --help		Show this help message\n"
+"    -h, --help      Show this help message\n"
 #ifdef HAVE_SDL2
-"\t-b, --beep		Play a simple beep using SDL audio\n"
-"\t-e, --error		Play a simple error beep using SDL audio\n"
+"    -b, --beep      Play a simple beep using SDL audio\n"
+"    -e, --error     Play a simple error beep using SDL audio\n"
 #endif
-"\t-d, --daemon		Run in the background and listen to FIFO /run/beepr-cmd\n"
-"\t-D, --dsp		Write data on /dev/dsp\n"
-"\t-f, --frequency	Set beep frequency in HZ\n"
-"\t-i, --ioctl		Use ioctl() on /dev/console\n"
-"\t-l, --length		Beep duration in milliseconds\n"
-"\t-p, --pipe		Write to /run/beepr-cmd\n"
-"\t-V, --version	Show program version and exit\n"
-"\t-v, --verbose	Show more information for debugging\n");
+"    -d, --daemon    Run in the background and listen to FIFO /run/beepr-cmd\n"
+"    -D, --dsp       Write data on /dev/dsp\n"
+"    -f, --frequency Set beep frequency in HZ\n"
+"    -i, --ioctl     Use ioctl() on /dev/console\n"
+"    -l, --length    Beep duration in milliseconds\n"
+"    -p, --pipe      Write to /run/beepr-cmd\n"
+"    -V, --version   Show program version and exit\n"
+"    -v, --verbose   Show more information for debugging\n");
 }
 
 void beeprShowVersion(void) {
